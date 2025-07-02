@@ -6,6 +6,11 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(glfw3 REQUIRED)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 set(GLAD_SOURCES ${CMAKE_SOURCE_DIR}/src/glad.c)
-
-add_executable(particleeffect src/main.cpp ${GLAD_SOURCES})
+#file (GLOB SOURCES
+#    "src/*.cpp"
+#)
+set(SOURCES
+    src/model/Particle.cpp src/Controller/ParticleController.cpp src/Viewer/ParticleViewer.cpp src/Window.cpp
+)
+add_executable(particleeffect src/main.cpp ${GLAD_SOURCES} ${SOURCES})
 target_link_libraries(particleeffect glfw)
