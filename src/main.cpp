@@ -1,55 +1,45 @@
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
 #include <iostream>
+#include <vector>
 
-using namespace std;
+#include "Particle.h"
+#include "shader.h"
+#include "ParticleViewer.h"
+#include "ParticleController.h"
+#include "Window.h"
+#include "Input.h"
+#include <GLFW/glfw3.h>
 
-constexpr int WIDTH = 800, HEIGHT = 600;
+constexpr int WIDTH = 600, HEIGHT = 600;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
+GLFWwindow* window;
 int main() {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    Window window(WIDTH, HEIGHT);
+    Input input(window.getWindow());
 
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Particle Simulation!", NULL, NULL);
-    if (window == NULL) {
-        cout << "Failed to create GLFW window." << endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    int particleNumber = 1;
+    ParticleController particleController;
 
-    if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) < 0) {
-        cout << "Failed to initialize GLAD" << endl;
-        return -1;
-    }
-    glViewport(0, 0, WIDTH, HEIGHT);
+    particleController.createParticles(particleNumber);
+    particleController.getView()->init();
 
-    while (!glfwWindowShouldClose(window)) {
-        processInput(window);
+    while (!window.shouldClose()) {
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        input.processInput();
 
         glClearColor(0.83, 0.31, 0.32, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glfwSwapBuffers(window);
+        particleController.update(deltaTime);
+
+        glfwSwapBuffers(window.getWindow());
         glfwPollEvents();
     }
-
     glfwTerminate();
     return 0;
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
-void processInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
 }

@@ -24,10 +24,12 @@ Window::Window(int width, int height): WIDTH(width), HEIGHT(height) {
   glViewport(0, 0, WIDTH, HEIGHT);
 }
 
-GLFWwindow* Window::getWindow() {
+GLFWwindow* Window::getWindow() const
+{
   return window;
 }
 
-bool Window::shouldClose() {
+bool Window::shouldClose() const
+{
   return glfwWindowShouldClose(window);
 }

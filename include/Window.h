@@ -15,8 +15,8 @@ private:
     GLFWwindow* window;
 public:
     Window(int width, int height);
-    GLFWwindow* getWindow();
-    bool shouldClose();
+    GLFWwindow* getWindow() const;
+    bool shouldClose() const;
 
 };
 #endif //WINDOW_H
